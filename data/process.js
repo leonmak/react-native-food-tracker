@@ -19,14 +19,18 @@ const sortAlpha = (a, b) => a.shortName.localeCompare(b.shortName);
 
 const result = { food: file.data.map(extendFoodId).sort(sortAlpha) };
 
+// let max = 0;
+// result.food.forEach(item => max = item.name.length > max ? item.name.length : max)
+// console.log(max);
+
 // console.log(result);
-const json = JSON.stringify(result);
-fs.writeFile('data.json', json, 'utf8',  err => {
-    if(err) {
-        return console.log(err);
-    }
-    console.log("The file was saved!");
-});
+// const json = JSON.stringify(result);
+// fs.writeFile('data.json', json, 'utf8',  err => {
+//     if(err) {
+//         return console.log(err);
+//     }
+//     console.log("The file was saved!");
+// });
 
 // json format:
 // data:
