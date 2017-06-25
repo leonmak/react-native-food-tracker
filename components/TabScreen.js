@@ -2,7 +2,7 @@
  * Created by Mak on 25/6/17.
  */
 import React from 'react';
-import Router from '../redux/router/index';
+import router from '../redux/router';
 import { connect } from 'react-redux';
 import { StyleSheet, Image } from 'react-native';
 import { StackNavigation, TabNavigation, TabNavigationItem as TabItem } from '@expo/ex-navigation';
@@ -19,17 +19,17 @@ const TabScreen = props => props.isLoggedIn ?
   <TabNavigation id="main" navigatorUID="main" initialTab="track">
     <TabItem id="track" title="Track" selectedStyle={styles.selectedTab}
              renderIcon={(isSelected) => <Image source={require('../assets/images/track.png')}/> }>
-      <StackNavigation id="track" navigatorUID="track" initialRoute={Router.getRoute('track')}/>
+      <StackNavigation id="track" navigatorUID="track" initialRoute={router.getRoute('track')}/>
     </TabItem>
 
     <TabItem id="upload" title="Upload" selectedStyle={styles.selectedTab}
              renderIcon={(isSelected) => <Image source={require('../assets/images/upload.png')}/> }>
-      <StackNavigation id="upload" initialRoute={Router.getRoute('upload')}/>
+      <StackNavigation id="upload" initialRoute={router.getRoute('upload')}/>
     </TabItem>
 
     <TabItem id="profile" title="Profile" selectedStyle={styles.selectedTab}
              renderIcon={(isSelected) => <Image source={require('../assets/images/profile.png')}/> }>
-      <StackNavigation id="profile" initialRoute={Router.getRoute('profile')}/>
+      <StackNavigation id="profile" initialRoute={router.getRoute('profile')}/>
     </TabItem>
   </TabNavigation>
   : <SignIn />

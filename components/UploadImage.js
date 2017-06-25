@@ -6,6 +6,7 @@ import { uploadImageAsync, annotate } from '../utils/image';
 import { getFoodsFromAnnotations } from '../utils/food';
 import { foodRef } from '../utils/firebase';
 import store from '../redux/store';
+import { goToTab } from '../redux/router';
 
 import {
   ActivityIndicator, Button, Clipboard,
@@ -120,12 +121,16 @@ export default class UploadImage extends React.Component {
   _uploadFoods = (foods) => {
     const uid = store.getState().auth.userObject.uid;
     console.log(uid)
-    foods.forEach(food => foodRef.push({
+    const uploads = foods.map(food => foodRef.push({
       food: food.shortName,
       user: uid,
       time: Date.now().valueOf(),
       done: false,
     }))
+    Promise.all(uploads).then(() => {
+      goToTab('track', this.props.navigation);
+      this.setState({image: null})
+    })
   }
 
   _handleImagePicked = async (pickerResult) => {
