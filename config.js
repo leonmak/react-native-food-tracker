@@ -11,6 +11,17 @@ const config = {
   google_cloud_vision: {
     "api_key": "AIzaSyCCETe7CqDiVUz4mhWT5Oi7vS0xS9ZcF_8",
   },
+  firebase: {
+    "apiKey": "AIzaSyBYhKsykkqfB1y5nYn4a0NzOtgQ7ZHEY2A",
+    "authDomain": "reactriot-4f51a.firebaseapp.com",
+    "databaseURL": "https://reactriot-4f51a.firebaseio.com",
+    "projectId": "reactriot-4f51a",
+    "storageBucket": "reactriot-4f51a.appspot.com",
+    "messagingSenderId": "406391622147"
+  },
+  facebook: {
+    "appId": "173969766475354",
+  },
 }
 
 export default config;
