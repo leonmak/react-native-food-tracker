@@ -1,34 +1,33 @@
 import React from 'react';
+import Router from './router';
 import { StyleSheet, Text, View } from 'react-native';
 import { Provider } from 'react-redux';
-import UploadImage from './components/UploadImage';
-import SignIn from './components/SignIn';
 import { initFirebase } from './utils/firebase';
+
+import {
+  NavigationContext,
+  NavigationProvider,
+  StackNavigation,
+} from '@expo/ex-navigation';
 
 import configureStore from './redux/store/configureStore';
 
-const store = configureStore();
-initFirebase(store.dispatch);
+export const Store = configureStore();
+initFirebase(Store.dispatch);
+
+const navigationContext = new NavigationContext({
+  router: Router,
+  store: Store,
+})
 
 export default class App extends React.Component {
   render() {
     return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          <Text></Text>
-          <SignIn />
-          <UploadImage />
-        </View>
+      <Provider store={Store}>
+        <NavigationProvider context={navigationContext}>
+          <StackNavigation initialRoute={Router.getRoute('tabs')} />
+        </NavigationProvider>
       </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

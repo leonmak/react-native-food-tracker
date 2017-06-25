@@ -2,7 +2,7 @@
  * Created by Mak on 25/6/17.
  */
 import React from 'react';
-import { uploadImageAsync, annotate } from '../utils/image';
+import { uploadImageAsync, annotate } from '../../utils/image';
 
 import {
   ActivityIndicator,
