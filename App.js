@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
 import router from './redux/router';
 import store from './redux/store';
 import { Provider } from 'react-redux';
@@ -11,6 +12,10 @@ initFirebase(store);
 const navigationContext = new NavigationContext({ router, store })
 
 export default class App extends React.Component {
+  componentWillMount() {
+    StatusBar.setHidden(true);
+  }
+
   render() {
     return (
       <Provider store={store}>

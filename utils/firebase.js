@@ -3,9 +3,9 @@
  */
 const React = require("react-native");
 const firebase = require("firebase");
+import store from '../redux/store';
 import config from '../config';
 import { checkSessionStatus } from '../redux/actions/auth';
-
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -18,9 +18,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 export default firebase;
 
-// Create a reference with .ref() instead of new Firebase(url)
 const rootRef = firebase.database().ref();
-export const foodRef = rootRef.child('food');
+export const usersRef = rootRef.child('users');
 
 export const initFirebase = (store) => {
   // Listen for authentication state to change.
@@ -34,3 +33,12 @@ export const initFirebase = (store) => {
   });
 }
 
+export const getFoodRef = () => {
+  const authState = store.getState().auth;
+  if (!authState.isLoggedIn) {
+    return null;
+  }
+  const currentUser = firebase.auth().currentUser;
+  const uid = currentUser.uid
+  return usersRef.child(uid).child('foods');
+}

@@ -4,8 +4,7 @@
 import React from 'react';
 import { uploadImageAsync, annotate } from '../utils/image';
 import { getFoodsFromAnnotations } from '../utils/food';
-import { foodRef } from '../utils/firebase';
-import store from '../redux/store';
+import { getFoodRef } from '../utils/firebase';
 import { goToTab } from '../redux/router';
 
 import {
@@ -119,11 +118,9 @@ export default class UploadImage extends React.Component {
   }
 
   _uploadFoods = (foods) => {
-    const uid = store.getState().auth.userObject.uid;
-    console.log(uid)
+    const foodRef = getFoodRef();
     const uploads = foods.map(food => foodRef.push({
-      food: food.shortName,
-      user: uid,
+      name: food.shortName,
       time: Date.now().valueOf(),
       done: false,
     }))

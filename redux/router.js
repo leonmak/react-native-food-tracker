@@ -7,9 +7,7 @@ import SignIn from '../components/SignIn';
 import TabScreen from '../components/TabScreen';
 import Track from '../components/Track';
 
-import store from './store/index';
-
-import { createRouter, NavigationActions } from '@expo/ex-navigation';
+import { createRouter} from '@expo/ex-navigation';
 
 const router = createRouter(() => ({
   tabs: () => TabScreen,
@@ -20,7 +18,7 @@ const router = createRouter(() => ({
 }));
 
 export const goToTab = (tabName, navigation) => {
-  navigation.performAction(({ tabs, stacks }) => {
+  navigation.performAction(({ tabs }) => {
     tabs('main').jumpToTab(tabName);
   });
 }

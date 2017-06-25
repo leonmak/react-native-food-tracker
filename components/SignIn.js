@@ -25,7 +25,7 @@ export default class SignInComponent extends React.Component {
     const { props } = this;
     return <View style={styles.container}>
       {props.isLoggedIn
-        ? <Text>Hi {props.user.displayName}</Text>
+        ? <Text>Hi {props.user.providerData[0].displayName}</Text>
         : <Button onPress={props.attemptLogin} title="Log In With Facebook"/>
       }
     </View>

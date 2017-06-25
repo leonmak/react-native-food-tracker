@@ -53,8 +53,8 @@ export function checkedSessionStatus(payload) {
 export function checkSessionStatus() {
   return (dispatch) => {
     const user = firebase.auth().currentUser;
-    if (user.providerData) {
-      dispatch(checkedSessionStatus(user.providerData[0]))
+    if (user) {
+      dispatch(checkedSessionStatus(user))
     }
   }
 }
