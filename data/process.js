@@ -25,7 +25,7 @@ const result = { food: file.data.map(extendFoodId).sort(sortAlpha) };
 
 // console.log(result);
 // const json = JSON.stringify(result);
-// fs.writeFile('data.json', json, 'utf8',  err => {
+// fs.writeFile('food.json', json, 'utf8',  err => {
 //     if(err) {
 //         return console.log(err);
 //     }

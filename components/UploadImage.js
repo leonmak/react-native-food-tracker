@@ -3,22 +3,15 @@
  */
 import React from 'react';
 import { uploadImageAsync, annotate } from '../utils/image';
+import { getFoodsFromAnnotations } from '../utils/food';
 
 import {
-  ActivityIndicator,
-  Button,
-  Clipboard,
-  Image,
-  Share,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
+  ActivityIndicator, Button, Clipboard,
+  Image, Share, StatusBar, StyleSheet,
+  Text, View, ScrollView,
 } from 'react-native';
 
-import {
-  ImagePicker,
-} from 'expo';
+import { ImagePicker } from 'expo';
 
 export default class UploadImage extends React.Component {
   state = {
@@ -35,15 +28,9 @@ export default class UploadImage extends React.Component {
           Example: Upload ImagePicker result
         </Text>
 
-        <Button
-          onPress={this._pickImage}
-          title="Pick an image from camera roll"
-        />
+        <Button onPress={this._pickImage} title="Pick an image from camera roll" />
 
-        <Button
-          onPress={this._takePhoto}
-          title="Take a photo"
-        />
+        <Button onPress={this._takePhoto} title="Take a photo" />
 
         { this._maybeRenderImage() }
         { this._maybeRenderUploadingOverlay() }
@@ -57,11 +44,7 @@ export default class UploadImage extends React.Component {
     if (this.state.uploading) {
       return (
         <View style={[StyleSheet.absoluteFill, {backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center'}]}>
-          <ActivityIndicator
-            color="#fff"
-            animating
-            size="large"
-          />
+          <ActivityIndicator color="#fff" animating size="large" />
         </View>
       );
     }
@@ -74,7 +57,7 @@ export default class UploadImage extends React.Component {
     }
 
     return (
-      <View style={{
+      <ScrollView style={{
         marginTop: 30,
         width: 250,
         borderRadius: 3,
@@ -97,7 +80,7 @@ export default class UploadImage extends React.Component {
           style={{paddingVertical: 10, paddingHorizontal: 10}}>
           {image}
         </Text>
-      </View>
+      </ScrollView>
     );
   }
 
@@ -132,6 +115,10 @@ export default class UploadImage extends React.Component {
     this._handleImagePicked(pickerResult);
   }
 
+  _uploadFoods = (foods) => {
+
+  }
+
   _handleImagePicked = async (pickerResult) => {
     let uploadResponse, uploadResult, annotation;
 
@@ -142,7 +129,7 @@ export default class UploadImage extends React.Component {
         uploadResponse = await uploadImageAsync(pickerResult.uri);
         uploadResult = await uploadResponse.json();
         this.setState({image: uploadResult.secure_url});
-        annotation = await annotate(uploadResult.url);
+        annotations = await annotate(uploadResult.url);
       }
     } catch(e) {
       console.log({e});
@@ -150,7 +137,7 @@ export default class UploadImage extends React.Component {
     } finally {
       console.log(uploadResponse);
       console.log(uploadResult);
-      console.log(annotation);
+      console.log(getFoodsFromAnnotations(annotations));
       this.setState({uploading: false});
     }
   }
