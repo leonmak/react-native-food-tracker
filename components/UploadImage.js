@@ -4,6 +4,8 @@
 import React from 'react';
 import { uploadImageAsync, annotate } from '../utils/image';
 import { getFoodsFromAnnotations } from '../utils/food';
+import { foodRef } from '../utils/firebase';
+import store from '../redux/store';
 
 import {
   ActivityIndicator, Button, Clipboard,
@@ -116,11 +118,18 @@ export default class UploadImage extends React.Component {
   }
 
   _uploadFoods = (foods) => {
-
+    const uid = store.getState().auth.userObject.uid;
+    console.log(uid)
+    foods.forEach(food => foodRef.push({
+      food: food.shortName,
+      user: uid,
+      time: Date.now().valueOf(),
+      done: false,
+    }))
   }
 
   _handleImagePicked = async (pickerResult) => {
-    let uploadResponse, uploadResult, annotation;
+    let uploadResponse, uploadResult, annotations;
 
     try {
       this.setState({uploading: true});
@@ -130,6 +139,7 @@ export default class UploadImage extends React.Component {
         uploadResult = await uploadResponse.json();
         this.setState({image: uploadResult.secure_url});
         annotations = await annotate(uploadResult.url);
+        this._uploadFoods(getFoodsFromAnnotations(annotations));
       }
     } catch(e) {
       console.log({e});
@@ -137,7 +147,6 @@ export default class UploadImage extends React.Component {
     } finally {
       console.log(uploadResponse);
       console.log(uploadResult);
-      console.log(getFoodsFromAnnotations(annotations));
       this.setState({uploading: false});
     }
   }

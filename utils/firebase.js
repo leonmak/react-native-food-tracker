@@ -20,7 +20,6 @@ export default firebase;
 
 // Create a reference with .ref() instead of new Firebase(url)
 const rootRef = firebase.database().ref();
-export const usersRef = rootRef.child('users');
 export const foodRef = rootRef.child('food');
 
 export const initFirebase = (store) => {
