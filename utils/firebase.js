@@ -23,12 +23,12 @@ const rootRef = firebase.database().ref();
 export const usersRef = rootRef.child('users');
 export const foodRef = rootRef.child('food');
 
-export const initFirebase = (dispatch) => {
+export const initFirebase = (store) => {
   // Listen for authentication state to change.
   firebase.auth().onAuthStateChanged((user) => {
     if (user !== null) {
       console.log("Authenticated!");
-      dispatch(checkSessionStatus());
+      store.dispatch(checkSessionStatus());
     } else {
       console.log("Not authenticated!");
     }

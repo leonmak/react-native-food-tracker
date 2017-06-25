@@ -1,31 +1,21 @@
 import React from 'react';
-import Router from './router';
-import { StyleSheet, Text, View } from 'react-native';
+import router from './redux/router';
+import store from './redux/store';
 import { Provider } from 'react-redux';
 import { initFirebase } from './utils/firebase';
 
-import {
-  NavigationContext,
-  NavigationProvider,
-  StackNavigation,
-} from '@expo/ex-navigation';
+import { NavigationContext,  NavigationProvider,  StackNavigation } from '@expo/ex-navigation';
 
-import configureStore from './redux/store/configureStore';
+initFirebase(store);
 
-export const Store = configureStore();
-initFirebase(Store.dispatch);
-
-const navigationContext = new NavigationContext({
-  router: Router,
-  store: Store,
-})
+const navigationContext = new NavigationContext({ router, store })
 
 export default class App extends React.Component {
   render() {
     return (
-      <Provider store={Store}>
+      <Provider store={store}>
         <NavigationProvider context={navigationContext}>
-          <StackNavigation initialRoute={Router.getRoute('tabs')} />
+          <StackNavigation initialRoute={router.getRoute('tabs')} />
         </NavigationProvider>
       </Provider>
     );

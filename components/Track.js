@@ -4,7 +4,7 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 
-export default class Home extends React.Component {
+export default class Track extends React.Component {
   render() {
     return (
       <View style={styles.container} >
