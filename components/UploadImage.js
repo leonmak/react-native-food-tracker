@@ -2,8 +2,7 @@
  * Created by Mak on 25/6/17.
  */
 import React from 'react';
-import CryptoJS  from 'crypto-js';
-import config from '../config';
+import { uploadImageAsync, annotate } from '../utils/image';
 
 import {
   ActivityIndicator,
@@ -134,7 +133,7 @@ export default class UploadImage extends React.Component {
   }
 
   _handleImagePicked = async (pickerResult) => {
-    let uploadResponse, uploadResult;
+    let uploadResponse, uploadResult, annotation;
 
     try {
       this.setState({uploading: true});
@@ -143,6 +142,7 @@ export default class UploadImage extends React.Component {
         uploadResponse = await uploadImageAsync(pickerResult.uri);
         uploadResult = await uploadResponse.json();
         this.setState({image: uploadResult.secure_url});
+        annotation = await annotate(uploadResult.url);
       }
     } catch(e) {
       console.log({e});
@@ -150,36 +150,8 @@ export default class UploadImage extends React.Component {
     } finally {
       console.log(uploadResponse);
       console.log(uploadResult);
+      console.log(annotation);
       this.setState({uploading: false});
     }
   }
-}
-
-async function uploadImageAsync(uri) {
-  let timestamp = (Date.now() / 1000 | 0).toString();
-  let api_key = config.CLOUDINARY.API_KEY;
-  let api_secret = config.CLOUDINARY.API_SECRET;
-  let cloud = config.CLOUDINARY.CLOUD_NAME;
-  let hash_string = 'timestamp=' + timestamp + api_secret;
-  let signature = CryptoJS.SHA1(hash_string).toString();
-  let apiUrl = 'https://api.cloudinary.com/v1_1/' + cloud + '/image/upload';
-
-  let fileType = uri[uri.length - 1];
-
-  let formData = new FormData();
-  formData.append('file', {uri, name: `photo.${fileType}`, type: `image/${fileType}`});
-  formData.append('timestamp', timestamp);
-  formData.append('api_key', api_key);
-  formData.append('signature', signature);
-
-  let options = {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'multipart/form-data',
-    },
-  };
-
-  return fetch(apiUrl, options);
 }
