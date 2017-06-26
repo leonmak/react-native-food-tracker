@@ -1,7 +1,7 @@
 /**
  * Created by Mak on 25/6/17.
  */
-import { Fetch_Food, Receive_Food } from '../constants';
+import { Fetch_Food, Receive_Food, Select_Food } from '../constants';
 import { getFoodRef } from '../../utils/firebase';
 import { getFoodImage } from '../../utils/image';
 
@@ -39,5 +39,14 @@ export function getFoods() {
         dispatch(receiveFood(foods))
       })
     })
+  }
+}
+
+export function selectFood(food) {
+  return {
+    type: Select_Food,
+    payload: {
+      data: food
+    }
   }
 }

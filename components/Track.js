@@ -30,10 +30,6 @@ export default class Track extends React.Component {
     this.props.getFoods();
   }
 
-  _onPressItem = (id) => {
-
-  };
-
   _getSubtitle(food) {
     const expiry = closestExpiryDate(food.name);
     const diff = expiry.diff(moment(), "days")
@@ -62,6 +58,19 @@ export default class Track extends React.Component {
     return style;
   }
 
+  _getFoodPopup = (food) => {
+    return () => {
+      this.props.selectFood(food);
+      this.props.navigator.push('food', {name: food.name});
+    }
+  }
+
+  static route = {
+    navigationBar: {
+      title: "Food Uploaded",
+    }
+  }
+
   render() {
     const { props } = this;
     return (
@@ -78,6 +87,7 @@ export default class Track extends React.Component {
                 avatar={{uri: food.image}}
                 title={food.name}
                 titleStyle={this._getTitleStyle(food)}
+                onPress={this._getFoodPopup(food)}
                 style={this._getStyle(food)}
                 subtitle={this._getSubtitle(food)}
                 subtitleStyle={this._getTitleStyle(food)}
@@ -85,7 +95,7 @@ export default class Track extends React.Component {
             ))
             : <View style={styles.container}>
                 <Text>{"No food uploaded yet."}</Text>
-                <Button title="Upload Receipt" onPress={() => goToTab('upload')} />
+                <Button title="Upload Receipt" onPress={() => goToTab('upload', props.navigation)} />
               </View>
         }
       </List>

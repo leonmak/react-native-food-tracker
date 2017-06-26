@@ -16,3 +16,5 @@ export const Logout_Success = 'Logout_Success';
 
 export const Fetch_Food = "Fetch_Food";
 export const Receive_Food = "Receive_Food";
+export const Select_Food = "Select_Food";
+export const Delete_Food = "Delete_Food";
