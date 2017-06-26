@@ -23,7 +23,7 @@ export default function authReducer(userAuthState = defaultStartState, {type, pa
       return Object.assign({}, userAuthState, {
         isLoggedIn: true,
         fetchingAuthUpdate: false,
-        userObject: userObject,
+        userObject: payload.userObject,
         error: null
       });
 

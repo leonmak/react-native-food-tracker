@@ -22,6 +22,10 @@ const config = {
   facebook: {
     "appId": "173969766475354",
   },
+  pixabay: {
+    "key": "5729747-242cd88a668e6d0ebb6df55e6",
+  },
+
 }
 
 export default config;

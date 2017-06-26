@@ -13,3 +13,6 @@ export const Checked_Session_Status = 'Checked_Session_Status';
 
 export const Clicked_Logout = 'Clicked_Logout';
 export const Logout_Success = 'Logout_Success';
+
+export const Fetch_Food = "Fetch_Food";
+export const Receive_Food = "Receive_Food";

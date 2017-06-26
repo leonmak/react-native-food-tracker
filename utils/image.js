@@ -41,3 +41,8 @@ export const uploadImageAsync = async (uri) => {
 
   return fetch(apiUrl, options);
 }
+
+export const getFoodImage = async (name) => {
+  const apiUrl = `https://pixabay.com/api/?key=${config.pixabay.key}&q=${name}&per_page=3`
+  return fetch(apiUrl)
+}

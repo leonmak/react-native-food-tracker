@@ -2,52 +2,93 @@
  * Created by Mak on 25/6/17.
  */
 import React from 'react';
+import { View, Button, StyleSheet, Text } from 'react-native';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as foodActionCreators from '../redux/actions/food';
+import { closestExpiryDate, expiredIn } from '../utils/food';
 import { List, ListItem } from "react-native-elements";
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { getFoodRef } from '../utils/firebase';
+import { goToTab } from '../redux/router';
+import moment from 'moment';
 
+
+function mapStateToProps(state) {
+  return {
+    isFetching: state.food.isFetching,
+    isLoaded: state.food.isLoaded,
+    foods: state.food.data,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(foodActionCreators, dispatch)
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class Track extends React.Component {
-  state = {
-    foods: []
+  componentDidMount() {
+    this.props.getFoods();
   }
-
-  componentWillMount() {
-    this.getFoods();
-  }
-
-  getFoods() {
-    getFoodRef().once('value', snapshots => {
-      if (!snapshots.exists()) {
-        return
-      }
-      const foods = Object.values(snapshots.val()).sort((a, b) => b.time - a.time)
-      this.setState({foods});
-    })
-  }
-
-  _keyExtractor = (item) => item.name;
 
   _onPressItem = (id) => {
 
   };
 
-  _renderItem = ({item}) => (
-    <ListItem
-      id={item.id}
-      onPressItem={this._onPressItem}
-      title={item.name}
-      subtitle={item.time}
-    />
-  );
+  _getSubtitle(food) {
+    const expiry = closestExpiryDate(food.name);
+    const diff = expiry.diff(moment(), "days")
+    return diff === 0
+      ? `Earliest expiry date is today!`
+      : moment().isBefore(expiry)
+      ? `Earliest expiry date in ${diff} days`
+      : `Earliest expiry date was ${-1 * diff} days ago`
+  }
+
+  _getTitleStyle(food) {
+    const expired = expiredIn(food.name, 0);
+    const expiredWeek = expiredIn(food.name, 7);
+    const color = expired || expiredWeek ? `white` : `black`;
+    return { color }
+  }
+
+  _getStyle(food) {
+    const expired = expiredIn(food.name, 0);
+    const expiredWeek = expiredIn(food.name, 7);
+    const bgColor = expired ? `coral` : expiredWeek ? `lightcoral` : `white`;
+    const style = {
+      backgroundColor: bgColor,
+      padding: 9
+    }
+    return style;
+  }
 
   render() {
+    const { props } = this;
     return (
-      <View>
-        {this.state.foods.length > 0
-          ? this.state.foods.map((food, idx) => <Text key={idx}>{food.name}</Text>)
-          : <Text>HI</Text>
+      <List>
+        {props.isFetching
+          ? <View style={styles.container}>
+              <Text>{"Fetching food"}</Text>
+            </View>
+          : props.foods.length > 0
+            ? props.foods.map((food, idx) => (
+              <ListItem
+                roundAvatar
+                key={idx}
+                avatar={{uri: food.image}}
+                title={food.name}
+                titleStyle={this._getTitleStyle(food)}
+                style={this._getStyle(food)}
+                subtitle={this._getSubtitle(food)}
+                subtitleStyle={this._getTitleStyle(food)}
+              />
+            ))
+            : <View style={styles.container}>
+                <Text>{"No food uploaded yet."}</Text>
+                <Button title="Upload Receipt" onPress={() => goToTab('upload')} />
+              </View>
         }
-      </View>
+      </List>
     )
   }
 }
@@ -56,5 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 });

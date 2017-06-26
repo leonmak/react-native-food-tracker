@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as authActionCreators from '../redux/actions/auth';
 
-
 function mapStateToProps(state) {
   return {
     isLoggedIn: state.auth.isLoggedIn,
