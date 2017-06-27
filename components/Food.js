@@ -2,13 +2,15 @@
  * Created by Mak on 26/6/17.
  */
 import React from 'react';
-import { Card, Avatar } from 'react-native-elements';
+import { Card, Avatar, SocialIcon } from 'react-native-elements';
 import { ScrollView, View, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as foodActionCreators from '../redux/actions/food';
 import { findFoodsByShortname, getExpiryDate } from '../utils/food';
 import moment from 'moment';
+import { Ionicons } from '@expo/vector-icons';
+
 
 function mapStateToProps({food}) {
   return {
@@ -25,31 +27,16 @@ export default class Food extends React.Component {
   static route = {
     navigationBar: {
       title(params) {
-        return `Details about ${params.name}`
-      }
+        return `Details about ${params.food.name}`;
+      },
     }
   }
 
-  _isDangerous = expiryMoment => expiryMoment && expiryMoment.diff(moment(), 'days') <= 3;
-
-  _getExpiryTextView = (food) => {
-    const expiryFreezer = food.freezer.length > 0 && getExpiryDate(food.freezer, food.time);
-    const expiryPantry = food.pantry.length > 0 && getExpiryDate(food.pantry, food.time);
-    const expiryRefrigerator = food.refrigerator.length > 0 && getExpiryDate(food.refrigerator, food.time);
-    const isDangerous = this._isDangerous(expiryFreezer)
-      || this._isDangerous(expiryPantry)
-      || this._isDangerous(expiryRefrigerator)
-    return (
-      <Card key={food.name}
-            title={food.name}
-            titleStyle={getExpiryStyle(isDangerous)}
-            containerStyle={{backgroundColor: isDangerous ? `orange` : `white`}}>
-        {this._getExpiryDateText(expiryPantry, isDangerous, 'Pantry: ')}
-        {this._getExpiryDateText(expiryRefrigerator, isDangerous, 'Fridge: ')}
-        {this._getExpiryDateText(expiryFreezer, isDangerous, 'Freezer: ')}
-      </Card>
-    )
+  _getSelected() {
+    return this.props.selected;
   }
+
+  _isDangerous = expiryMoment => expiryMoment && expiryMoment.diff(moment(), 'days') <= 3;
 
   _getExpiryDateText = (expiryMoment, isDangerous, prefix) => {
     return expiryMoment && <Text
@@ -74,14 +61,43 @@ export default class Food extends React.Component {
 
   _getExpiryTextViews = (name) => findFoodsByShortname(name).map(food => this._getExpiryTextView(food));
 
+  _getExpiryTextView = (food) => {
+    const expiryFreezer = food.freezer.length > 0 && getExpiryDate(food.freezer, food.time);
+    const expiryPantry = food.pantry.length > 0 && getExpiryDate(food.pantry, food.time);
+    const expiryRefrigerator = food.refrigerator.length > 0 && getExpiryDate(food.refrigerator, food.time);
+    const isDangerous = this._isDangerous(expiryFreezer)
+      || this._isDangerous(expiryPantry)
+      || this._isDangerous(expiryRefrigerator)
+    return (
+      <Card key={food.name}
+            title={food.name}
+            titleStyle={getExpiryStyle(isDangerous)}
+            containerStyle={{backgroundColor: isDangerous ? `orange` : `white`}}>
+        {this._getExpiryDateText(expiryPantry, isDangerous, 'Pantry: ')}
+        {this._getExpiryDateText(expiryRefrigerator, isDangerous, 'Fridge: ')}
+        {this._getExpiryDateText(expiryFreezer, isDangerous, 'Freezer: ')}
+      </Card>
+    )
+  }
+
   render() {
     const {props} = this;
     return (props.selected && <ScrollView >
-        <View style={{flex: 1, height: 100, backgroundColor: 'white', alignItems: 'center'}}>
+        <View style={{flex: 1, flexDirection: 'row', height: 100, backgroundColor: 'white', alignItems: 'center'}}>
+          <Ionicons name="ios-trash" size={45} color="salmon"
+                    style={{paddingLeft: 15}}
+                    onPress={()=> {
+                      props.deleteFood(props.route.params.food.id)
+                      props.navigator.pop();
+                    }}
+          />
           <Avatar large rounded source={{uri: props.selected.image}}
                   style={{flex: 1}}
                   onPress={() => console.log("Works!")}
                   activeOpacity={0.7} />
+          <SocialIcon type="youtube" iconSize={30}
+                      onPress={()=> { props.navigator.pop() }}
+          />
         </View>
 
           {this._getExpiryTextViews(props.selected.name)}

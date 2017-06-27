@@ -61,7 +61,7 @@ export default class Track extends React.Component {
   _getFoodPopup = (food) => {
     return () => {
       this.props.selectFood(food);
-      this.props.navigator.push('food', {name: food.name});
+      this.props.navigator.push('food', {food});
     }
   }
 

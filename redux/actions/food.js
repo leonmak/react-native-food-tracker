@@ -1,7 +1,7 @@
 /**
  * Created by Mak on 25/6/17.
  */
-import { Fetch_Food, Receive_Food, Select_Food } from '../constants';
+import { Fetch_Food, Receive_Food, Select_Food, Delete_Food } from '../constants';
 import { getFoodRef } from '../../utils/firebase';
 import { getFoodImage } from '../../utils/image';
 
@@ -27,7 +27,13 @@ export function getFoods() {
       if (!snapshots.exists()) {
         return
       }
-      const foods = Object.values(snapshots.val()).sort((a, b) => b.time - a.time)
+      const foodMap = snapshots.val();
+      const foodsWithId = Object.keys(foodMap).map(foodId => {
+        const food = foodMap[foodId];
+        food.id = foodId;
+        return food;
+      })
+      const foods = Object.values(foodsWithId).sort((a, b) => b.time - a.time)
       const getFoodImages = foods.map(food => getFoodImage(food.name)
         .then(res => res.json())
         .then(data => data.hits[~~(Math.random() * data.hits.length)].previewURL)
@@ -48,5 +54,15 @@ export function selectFood(food) {
     payload: {
       data: food
     }
+  }
+}
+
+export function deleteFood(foodId) {
+  return dispatch => {
+    getFoodRef().child(foodId).remove(err => {
+      if (!err) {
+        getFoods()(dispatch);
+      }
+    })
   }
 }

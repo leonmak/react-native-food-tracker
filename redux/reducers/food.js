@@ -31,6 +31,8 @@ export default function foodReducer(state = initialState, {type, payload}) {
       })
 
     case Delete_Food:
+      return Object.assign({}, state)
+
     default:
       return state
   }
